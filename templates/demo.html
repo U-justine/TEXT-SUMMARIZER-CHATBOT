@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuSum Demo - AI Document Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .demo-header {
+            margin-bottom: 3rem;
+        }
+
+        .demo-logo {
+            display: inline-flex;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .demo-logo i {
+            margin-right: 0.5rem;
+            color: #fbbf24;
+        }
+
+        .demo-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .demo-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .demo-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-demo {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-demo:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .feature-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-demo h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-demo p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .demo-preview {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .preview-mockup {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            color: #333;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .mockup-header {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border-radius: 10px 10px 0 0;
+            font-weight: 500;
+        }
+
+        .mockup-header i {
+            margin-right: 0.5rem;
+        }
+
+        .mockup-content {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .chat-message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 0.75rem;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        .message-content {
+            background: #f8fafc;
+            padding: 0.75rem;
+            border-radius: 12px;
+            flex: 1;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .user-message {
+            flex-direction: row-reverse;
+        }
+
+        .user-message .message-content {
+            background: #6366f1;
+            color: white;
+        }
+
+        .user-message .message-avatar {
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .demo-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1e293b;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .demo-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fbbf24;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-icon {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .floating-icon:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-icon:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+
+        .floating-icon:nth-child(3) {
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 10s;
+        }
+
+        .floating-icon:nth-child(4) {
+            bottom: 30%;
+            right: 10%;
+            animation-delay: 15s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-20px) rotate(90deg);
+            }
+            50% {
+                transform: translateY(0px) rotate(180deg);
+            }
+            75% {
+                transform: translateY(20px) rotate(270deg);
+            }
+            100% {
+                transform: translateY(0px) rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .demo-title {
+                font-size: 2rem;
+            }
+
+            .demo-stats {
+                gap: 2rem;
+            }
+
+            .demo-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <i class="fas fa-file-pdf floating-icon"></i>
+        <i class="fas fa-brain floating-icon"></i>
+        <i class="fas fa-comments floating-icon"></i>
+        <i class="fas fa-magic floating-icon"></i>
+    </div>
+
+    <div class="demo-container">
+        <div class="demo-header">
+            <div class="demo-logo">
+                <i class="fas fa-robot"></i>
+                DocuSum
+            </div>
+            <h1 class="demo-title">Experience the Future of Document Analysis</h1>
+            <p class="demo-subtitle">
+                Transform your PDF documents into intelligent conversations with our AI-powered summarization and question-answering system.
+            </p>
+        </div>
+
+        <div class="demo-stats">
+            <div class="stat">
+                <span class="stat-number">10MB</span>
+                <span class="stat-label">Max File Size</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">5s</span>
+                <span class="stat-label">Avg Processing</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">95%</span>
+                <span class="stat-label">Accuracy Rate</span>
+            </div>
+        </div>
+
+        <div class="demo-features">
+            <div class="feature-demo">
+                <div class="feature-icon">
+                    <i class="fas fa-upload"></i>
+                </div>
+                <h3>Easy Upload</h3>
+                <p>Drag and drop PDF files or click to browse. Instant processing with real-time progress feedback.</p>
+            </div>
+
+            <div class="feature-demo">
+                <div class="feature-icon">
+                    <i class="fas fa-compress-alt"></i>
+                </div>
+                <h3>Smart Summarization</h3>
+                <p>Generate concise, accurate summaries that capture the key points and main themes of your documents.</p>
+            </div>
+
+            <div class="feature-demo">
+                <div class="feature-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3>Interactive Q&A</h3>
+                <p>Ask natural language questions and get precise answers based on your document's content.</p>
+            </div>
+        </div>
+
+        <div class="demo-preview">
+            <h2 class="preview-title">See It In Action</h2>
+            <div class="preview-mockup">
+                <div class="mockup-header">
+                    <i class="fas fa-comments"></i>
+                    AI Assistant Chat
+                </div>
+                <div class="mockup-content">
+                    <div class="chat-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            Great! I've processed "Research_Paper.pdf". You can now ask me questions about the document or request a summary.
+                        </div>
+                    </div>
+                    <div class="chat-message user-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            What are the main findings of this research?
+                        </div>
+                    </div>
+                    <div class="chat-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            The research identifies three key findings: 1) AI models show 87% accuracy improvement with the new training method, 2) Processing speed increased by 40%, and 3) The approach is scalable across different domains.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-actions">
+            <a href="/" class="btn btn-primary">
+                <i class="fas fa-rocket"></i>
+                Try DocuSum Now
+            </a>
+            <a href="https://github.com" class="btn btn-secondary">
+                <i class="fab fa-github"></i>
+                View on GitHub
+            </a>
+        </div>
+    </div>
+</body>
+</html>

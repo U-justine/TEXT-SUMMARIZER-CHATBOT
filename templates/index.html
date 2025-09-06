@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuSum - AI Document Summarizer & ChatBot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-robot"></i>
+                <span>DocuSum</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how-it-works" class="nav-link">How it Works</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-sparkles"></i>
+                    <span>AI-Powered Document Analysis</span>
+                </div>
+                <h1 class="hero-title">
+                    Transform Documents into
+                    <span class="gradient-text">Intelligent Conversations</span>
+                </h1>
+                <p class="hero-description">
+                    Upload any PDF document and get instant summaries, ask questions, and interact with your content using advanced AI technology.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToUpload()">
+                        <i class="fas fa-upload"></i>
+                        Try It Now
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-play"></i>
+                        Watch Demo
+                    </button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-cards">
+                    <div class="card card-1">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>PDF Upload</span>
+                    </div>
+                    <div class="card card-2">
+                        <i class="fas fa-brain"></i>
+                        <span>AI Analysis</span>
+                    </div>
+                    <div class="card card-3">
+                        <i class="fas fa-comments"></i>
+                        <span>Smart Chat</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Powerful Features</h2>
+                <p>Everything you need to understand and interact with your documents</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <h3>Smart Summarization</h3>
+                    <p>Get concise, accurate summaries of lengthy documents in seconds using advanced AI models.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3>Interactive Q&A</h3>
+                    <p>Ask questions about your document and get precise answers based on the content.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3>Multi-language Support</h3>
+                    <p>Process documents in multiple languages with accurate understanding and responses.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure Processing</h3>
+                    <p>Your documents are processed securely and privately, ensuring data confidentiality.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Application Interface -->
+    <section id="app-interface" class="app-section">
+        <div class="container">
+            <div class="app-grid">
+                <!-- Document Upload Panel -->
+                <div class="upload-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-cloud-upload-alt"></i> Upload Document</h3>
+                    </div>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <i class="fas fa-file-pdf upload-icon"></i>
+                            <h4>Drop your PDF here</h4>
+                            <p>Or click to browse files</p>
+                            <input type="file" id="fileInput" accept=".pdf" hidden>
+                            <div class="upload-formats">
+                                <span class="format-tag">PDF</span>
+                                <span class="size-limit">Max 10MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <span class="progress-text">Uploading... 0%</span>
+                    </div>
+                    <div class="document-info" id="documentInfo" style="display: none;">
+                        <div class="doc-preview">
+                            <i class="fas fa-file-pdf"></i>
+                            <div class="doc-details">
+                                <h5 id="docName">Document.pdf</h5>
+                                <p id="docSize">Size: 2.5 MB</p>
+                            </div>
+                            <button class="btn-remove" onclick="removeDocument()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="summarizeDocument()" id="summarizeBtn">
+                                <i class="fas fa-compress-alt"></i>
+                                Summarize
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Interface -->
+                <div class="chat-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-comments"></i> AI Assistant</h3>
+                        <div class="chat-status">
+                            <span class="status-indicator" id="statusIndicator"></span>
+                            <span id="statusText">Ready to help</span>
+                        </div>
+                    </div>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message assistant-message">
+                                <div class="message-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="message-content">
+                                    <p>Hello! I'm your AI document assistant. Upload a PDF document to get started, and I'll help you understand its content through summaries and answer any questions you have.</p>
+                                </div>
+                                <div class="message-time">Just now</div>
+                            </div>
+                        </div>
+                        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <div class="chat-input-wrapper">
+                            <input type="text" id="chatInput" placeholder="Ask a question about your document..." disabled>
+                            <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="quick-actions">
+                            <button class="quick-btn" onclick="askQuickQuestion('What is the main topic?')">
+                                <i class="fas fa-lightbulb"></i>
+                                Main Topic
+                            </button>
+                            <button class="quick-btn" onclick="askQuickQuestion('What are the key points?')">
+                                <i class="fas fa-list"></i>
+                                Key Points
+                            </button>
+                            <button class="quick-btn" onclick="askQuickQuestion('Can you explain this in simple terms?')">
+                                <i class="fas fa-graduation-cap"></i>
+                                Simplify
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Get started in three simple steps</p>
+            </div>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Upload Document</h3>
+                        <p>Simply drag and drop your PDF document or click to browse and upload.</p>
+                    </div>
+                </div>
+                <div class="step-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>AI Analysis</h3>
+                        <p>Our advanced AI analyzes your document and creates an intelligent summary.</p>
+                    </div>
+                </div>
+                <div class="step-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Chat & Explore</h3>
+                        <p>Ask questions, get insights, and interact with your document content naturally.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-robot"></i>
+                    <span>DocuSum</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                    <a href="#support">Support</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 DocuSum. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
